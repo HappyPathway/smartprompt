@@ -14,7 +14,7 @@ class ProjectInitializer:
     def __init__(self, project_name: str, repo_org: str, repositories: str):
         self.project_name = project_name
         self.repo_org = repo_org
-        self.repositories = json.loads(repositories)  # Deserialize the JSON string
+        self.repositories = repositories  # Deserialize the JSON string
         self.base_dir = Path("..").resolve()
         self.semaphore = asyncio.Semaphore(5)  # Limit concurrent git operations
 
