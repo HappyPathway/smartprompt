@@ -7,7 +7,7 @@ terraform {
 }
 
 provider "smartprompt" {
-  api_url = "https://smartprompt-api-xxxxx-uc.a.run.app"  # Will be replaced with actual Cloud Run URL
+  api_url = "https://smartprompt-api-xxxxx-uc.a.run.app" # Will be replaced with actual Cloud Run URL
   timeout = 30
 }
 
@@ -19,11 +19,11 @@ data "smartprompt_refined" "simple" {
 # Advanced usage with all features
 data "smartprompt_refined" "advanced" {
   lazy_prompt            = "design a microservices architecture"
-  domain                = "architecture"
-  expertise_level       = "expert"
-  output_format         = "checklist"
+  domain                 = "architecture"
+  expertise_level        = "expert"
+  output_format          = "checklist"
   include_best_practices = true
-  include_examples      = true
+  include_examples       = true
 }
 
 output "simple_refined_prompt" {
