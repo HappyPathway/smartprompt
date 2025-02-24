@@ -1,0 +1,7 @@
+{
+  "project_name": "smartprompt",
+  "repo_org": "HappyPathway",
+  "docs_base_path": "~/.gproj/docs",
+  "documentation_sources": [{"name":"docs/provider/google/data-sources","path":"website/docs/d","repo":"https://github.com/hashicorp/terraform-provider-google","tag":"main"},{"name":"docs/provider/google/resources","path":"website/docs/r","repo":"https://github.com/hashicorp/terraform-provider-google","tag":"main"},{"name":"docs/terraform-plugin-sdk/plugin/sdkv2","path":"website/docs/plugin/sdkv2","repo":"https://github.com/hashicorp/terraform-plugin-sdk","tag":"main"},{"name":"docs/terraform/language/tests","path":"website/docs/language/tests","repo":"https://github.com/hashicorp/terraform","tag":"main"},{"name":"docs/openai-python","path":".","repo":"https://github.com/openai/openai-python","tag":"main"},{"name":"docs/openai-go","path":".","repo":"https://github.com/openai/openai-go","tag":"main"},{"name":"docs/anthropic-python","path":".","repo":"https://github.com/anthropics/anthropic-sdk-python","tag":"main"}],
+  "repositories": [{"description":"smartprompt::terraform-provider-smartprompt","name":"terraform-provider-smartprompt"},{"description":"smartprompt::smartprompt-api","name":"smartprompt-api"},{"description":"smartprompt::smartprompt-client","name":"smartprompt-client"},{"description":"smartprompt::smartprompt-infra-deployment","name":"smartprompt-infra-deployment"},{"description":"smartprompt::smartprompt-website","name":"smartprompt-website"}]
+}
