@@ -1,21 +1,79 @@
-High-Level Project Prompt:
+# Prompt Refinement System
 
-Build an integrated system that transforms simple, “lazy” prompts into rich, high-quality prompts, and makes this functionality accessible both as a web API and via Terraform. The project consists of four interconnected components:
+## Overview
+This project transforms simple "lazy" prompts into rich, high-quality prompts, making the functionality accessible via both web API and Terraform.
 
-Prompt Refinement API (FastAPI):
-Create a RESTful service that receives a simple prompt and returns an enhanced, detailed prompt. The API should provide an endpoint (POST /refine-prompt) that accepts a JSON payload with a “lazy_prompt” field, refines the prompt (initially via a basic transformation, with future capability to integrate advanced language models), and returns the refined version. The service should include proper error handling, logging, and auto-generated OpenAPI documentation.
+## Components
 
-Golang Client Library:
-Develop a Golang library that serves as a client for the prompt refinement API. This library must offer a simple interface (for example, a RefinePrompt(lazyPrompt string) (string, error) function) that abstracts the API communication details. It should handle configuration (such as the API endpoint and timeouts), perform robust error handling (including retries), and provide clear documentation so that other systems can easily integrate prompt refinement functionality.
+### 1. Prompt Refinement API (FastAPI)
+- RESTful service for prompt enhancement
+- Endpoint: POST /refine-prompt
+- Features:
+  - JSON payload with "lazy_prompt" field
+  - Enhanced prompt response
+  - Error handling and logging
+  - OpenAPI documentation
+  - Token-based authentication
+  - Request validation
 
-Terraform Provider (Golang):
-Implement a Terraform provider in Golang that integrates the client library to offer prompt refinement as part of Terraform configurations. Users should be able to define a resource (or data source) that takes a “lazy_prompt” as an input and outputs the refined prompt as an attribute (e.g., “refined_prompt”). This provider should adhere to Terraform Plugin SDK best practices, include full schema definitions, logging, and error handling, and be accompanied by clear documentation and build instructions.
+### 2. Golang Client Library
+- Client interface for prompt refinement API
+- Core functionality:
+  - Simple RefinePrompt function
+  - Configuration management
+  - Error handling with retries
+  - Comprehensive documentation
+  - Authentication token management
+  - Secure token storage
 
-GCP Deployment Code:
-Write Terraform code to deploy the FastAPI-based prompt refinement API to Google Cloud Platform. The deployment should use containerized infrastructure (via Cloud Run or App Engine) and include a Dockerfile for building the FastAPI application image. The Terraform code must handle the entire lifecycle: building and pushing the Docker image to a container registry, provisioning the cloud service with appropriate IAM roles and environment variables, and configuring scalable and secure access to the API.
+### 3. Terraform Provider (Golang)
+- Integration with client library
+- Features:
+  - Resource/data source for prompt refinement
+  - Input: "lazy_prompt"
+  - Output: "refined_prompt"
+  - Terraform Plugin SDK compliance
+  - Complete schema definitions
+  - Documentation and build instructions
+  - Authentication configuration
+  - Token validation
 
-Overall Integration:
+### 4. GCP Deployment Code
+- Terraform deployment configuration for GCP
+- Components:
+  - Containerized infrastructure (Cloud Run/App Engine)
+  - Dockerfile for FastAPI application
+  - Container registry integration
+  - IAM role configuration
+  - Environment variable management
+  - Secure API access setup
 
-This project aims to simplify prompt management for users who may not be skilled in prompt engineering. By allowing users to supply a simple “lazy” prompt, the system automatically refines it into a detailed, high-quality prompt. The FastAPI service handles the prompt enhancement logic, while the Golang client library and Terraform provider ensure that this capability can be seamlessly integrated into infrastructure as code and automated workflows. The GCP deployment code enables easy, scalable deployment of the API, ensuring the entire solution is cloud-native and production-ready.
+## Authentication
+The system implements token-based authentication across all components:
 
-This high-level project prompt serves as the blueprint for building each component, ensuring that they all work together to provide a robust and user-friendly prompt refinement solution.
+### API Authentication
+- Bearer token authentication required for all API endpoints
+- Token validation middleware
+- Rate limiting per token
+- Token expiration and rotation support
+
+### Client Library Authentication
+- Token management utilities
+- Secure token storage
+- Automatic token refresh handling
+- Configuration via environment variables or explicit setup
+
+### Terraform Provider Authentication
+- Token configuration via provider block
+- Support for environment variables
+- Sensitive value handling for tokens
+- Optional token rotation configuration
+
+## Integration Overview
+The system simplifies prompt management through:
+- Automatic refinement of simple prompts
+- Seamless infrastructure integration
+- Cloud-native deployment
+- Production-ready architecture
+
+This project serves as a complete solution for transforming basic prompts into detailed, high-quality versions while maintaining ease of use and scalability.
