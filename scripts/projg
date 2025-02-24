@@ -318,7 +318,7 @@ def main():
     # Project configuration
     project_name = "tf-smart-prompt"
     repo_org = "HappyPathway"
-    repositories = [{"description":"tf-smart-prompt::terraform-provider-smartprompt","name":"terraform-provider-smartprompt"},{"description":"tf-smart-prompt::smartprompt-api","name":"smartprompt-api"},{"description":"tf-smart-prompt::smartprompt-client","name":"smartprompt-client"},{"description":"tf-smart-prompt::smartprompt-infra-deployment","name":"smartprompt-infra-deployment"}]
+    repositories = [{"description":"tf-smart-prompt::terraform-provider-smartprompt","name":"terraform-provider-smartprompt"},{"description":"tf-smart-prompt::smartprompt-api","name":"smartprompt-api"},{"description":"tf-smart-prompt::smartprompt-client","name":"smartprompt-client"},{"description":"tf-smart-prompt::smartprompt-infra-deployment","name":"smartprompt-infra-deployment"},{"description":"tf-smart-prompt::smartprompt-website","name":"smartprompt-website"}]
 
     config = {
         "project_name": project_name,

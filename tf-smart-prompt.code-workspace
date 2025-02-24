@@ -5,6 +5,8 @@
             "hashicorp.hcl",
             "ms-python.python",
             "ms-python.vscode-pylance",
+            "dbaeumer.vscode-eslint",
+            "esbenp.prettier-vscode",
             "github.copilot",
             "github.copilot-chat",
             "eamodio.gitlens"
@@ -32,6 +34,10 @@
             "path": "../smartprompt-infra-deployment"
         },
         {
+            "name": "smartprompt-website",
+            "path": "../smartprompt-website"
+        },
+        {
             "name": "docs/terraform/language/tests",
             "path": "../docs/terraform/website/docs/language/tests"
         },
@@ -45,6 +51,14 @@
         },
         {
             "path": "../docs/openai-python"
+        },
+        {
+            "name": "providers/google/resources",
+            "path": "../providers/terraform-provider-google/website/docs/r"
+        },
+        {
+            "name": "providers/google/data-sources",
+            "path": "../providers/terraform-provider-google/website/docs/d"
         }
     ],
     "launch": {
