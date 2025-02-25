@@ -26,13 +26,18 @@ class DocSourceManager:
         """Expand environment variables and ~ in path"""
         return os.path.expandvars(os.path.expanduser(path))
 
-    async def clone_doc_repo(self, repo: Dict) -> bool:
+    def transform_doc_path(self, source: Dict) -> str:
+        """Transform doc source path to match workspace config"""
+        base_path = self.expand_path(self.config["docs_base_path"])
+        name = source["name"].replace("^docs/+", "", 1)
+        return str(Path(base_path) / name)
+
+    async def clone_doc_repo(self, source: Dict) -> bool:
         """Clone a documentation repository"""
         try:
-            base_path = Path(self.expand_path(self.config["docs_base_path"]))
-            repo_dir = base_path / repo["name"]
+            repo_dir = Path(self.transform_doc_path(source))
             if repo_dir.exists():
-                print(f"Documentation repo {repo['name']} exists, checking out {repo['tag']}...")
+                print(f"Documentation repo {source['name']} exists, checking out {source.get('tag', 'main')}...")
                 process = await asyncio.create_subprocess_exec(
                     "git", "-C", str(repo_dir), "fetch", "--all",
                     stdout=asyncio.subprocess.PIPE,
@@ -40,29 +45,35 @@ class DocSourceManager:
                 )
                 await process.communicate()
                 process = await asyncio.create_subprocess_exec(
-                    "git", "-C", str(repo_dir), "checkout", repo["tag"],
+                    "git", "-C", str(repo_dir), "checkout", source.get("tag", "main"),
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE
                 )
                 await process.communicate()
             else:
-                print(f"Cloning documentation repo {repo['name']}...")
+                print(f"Cloning documentation repo {source['name']}...")
                 repo_dir.parent.mkdir(parents=True, exist_ok=True)
                 process = await asyncio.create_subprocess_exec(
-                    "git", "clone", "--depth", "1", "-b", repo["tag"],
-                    repo["repo"], str(repo_dir),
+                    "git", "clone", source["repo"], str(repo_dir),
                     stdout=asyncio.subprocess.PIPE,
                     stderr=asyncio.subprocess.PIPE
                 )
                 await process.communicate()
+                if source.get("tag"):
+                    process = await asyncio.create_subprocess_exec(
+                        "git", "-C", str(repo_dir), "checkout", source["tag"],
+                        stdout=asyncio.subprocess.PIPE,
+                        stderr=asyncio.subprocess.PIPE
+                    )
+                    await process.communicate()
             return True
         except Exception as e:
-            print(f"Error processing documentation repo {repo['name']}: {e}")
+            print(f"❌ Error processing {source['name']}: {str(e)}")
             return False
 
     async def process_doc_sources(self) -> None:
         """Process all documentation sources"""
-        if not self.config["documentation_sources"]:
+        if not self.config.get("documentation_sources"):
             return
 
         print("\nProcessing documentation sources...")
