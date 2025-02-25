@@ -87,43 +87,33 @@ class DocSourceManager:
         return os.path.expandvars(os.path.expanduser(path))
 
     def transform_doc_path(self, source: Dict) -> str:
-        """
-        Figure out where to store a documentation repository locally.
+        """Transform documentation source path to organized storage location.
         
-        Takes a documentation source (which includes a Git URL) and determines
-        the local folder where it should be stored. The path will be organized
-        like this: ~/.gproj/docs/organization-name/repository-name
+        The path structure will be:
+        {docs_base_path}/{source_org}/{source_repo}/{path}
+        
+        This allows documentation from multiple organizations to coexist
+        without conflicts.
         
         Args:
             source: Dictionary containing repository information
-                   Must include a 'repo' key with the Git URL
+                   Must include 'repo' key with org/repo format
                    
         Returns:
             str: The full path where the repository should be stored
-            
-        Raises:
-            ValueError: If the source doesn't include a repo URL
         """
         if not self.config.get("docs_base_path"):
             print("❌ No docs_base_path specified in .gproj configuration")
             sys.exit(1)
             
         base_path = self.expand_path(self.config["docs_base_path"])
-        repo_url = source.get("repo", "")
-        if not repo_url:
-            raise ValueError("repo is required in documentation source config")
-        
-        # Clean up the repository URL to get just the organization and repository names
-        cleaned_url = (repo_url
-            .replace("git@", "")           # Remove git@ prefix for SSH URLs
-            .replace(":", "/")             # Convert SSH separator to path separator
-            .replace("https://", "")       # Remove https:// prefix for HTTPS URLs
-            .replace(".git", ""))          # Remove .git suffix
-        
-        # Get just the organization and repository name parts
-        parts = cleaned_url.split("/")
-        org_repo = "/".join(parts[-2:])
-        return str(Path(base_path) / org_repo)
+        repo_path = source.get("repo", "")
+        if "/" not in repo_path:
+            raise ValueError("repo must be in format 'org/repo' in documentation source config")
+
+        # Use the organization/repo from the source repo URL
+        org, repo = repo_path.split("/", 1)
+        return str(Path(base_path) / org / repo)
 
     async def clone_doc_repo(self, source: Dict) -> bool:
         """
