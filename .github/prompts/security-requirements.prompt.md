@@ -7,9 +7,7 @@ This repository follows specific security requirements and frameworks to ensure 
 No specific security frameworks are currently implemented.
 
 ## Repository Topics
-This repository is tagged with the following security-relevant topics:
-- terraform
-- terraform-provider
+No security-relevant topics are currently set for this repository.
 
 ## Security Considerations
 - Follow secure coding practices
