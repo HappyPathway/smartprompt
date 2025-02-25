@@ -8,12 +8,6 @@ This repository is part of the smartprompt project.
 
 
 
-### Infrastructure Tools
-- terraform
-- terraform-provider
-- gcp
-- deployment
-- infrastructure
 
 
 
