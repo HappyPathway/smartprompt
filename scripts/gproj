@@ -119,18 +119,29 @@ class DocSourceManager:
             repo = re.sub(r'\.git$', '', repo)
             return org, repo
 
+    def extract_repo_name(self, repo_url: str) -> str:
+        """Extract just the repository name from a URL or org/repo format.
+        
+        Handles:
+        - git@github.com:org/repo.git -> repo
+        - https://github.com/org/repo -> repo
+        - org/repo -> repo
+        
+        Returns:
+            str: Repository name without .git suffix
+        """
+        # Remove .git suffix if present
+        repo_url = re.sub(r'\.git$', '', repo_url)
+        
+        # Extract the last part after / or :
+        return repo_url.split('/')[-1].split(':')[-1]
+
     def transform_doc_path(self, source: Dict) -> str:
-        """Transform documentation source path to organized storage location.
-        
-        The path structure will be:
-        {docs_base_path}/{source_org}/{source_repo}/{path}
-        
-        This allows documentation from multiple organizations to coexist
-        without conflicts.
+        """Transform documentation source path to storage location.
         
         Args:
             source: Dictionary containing repository information
-                   Must include 'repo' key with org/repo format
+                   Must include 'repo' key
                    
         Returns:
             str: The full path where the repository should be stored
@@ -140,14 +151,10 @@ class DocSourceManager:
             sys.exit(1)
             
         base_path = self.expand_path(self.config["docs_base_path"])
-        repo_path = source.get("repo", "")
+        repo_url = source.get("repo", "")
+        repo_name = self.extract_repo_name(repo_url)
         
-        try:
-            org, repo = self.extract_org_repo(repo_path)
-            return str(Path(base_path) / org / repo)
-        except ValueError as e:
-            print(f"❌ Error: {str(e)}")
-            sys.exit(1)
+        return str(Path(base_path) / repo_name)
 
     async def clone_doc_repo(self, source: Dict) -> bool:
         """Clone or update a documentation repository."""
@@ -160,7 +167,7 @@ class DocSourceManager:
                 repo_url = f"git@github.com:{repo_url}.git"
             
             if repo_dir.exists():
-                print(f"Documentation repo {repo_dir.name} exists, checking out {source.get('tag', 'main')}...")
+                print(f"Documentation repo {repo_dir.name} exists, updating...")
                 process = await asyncio.create_subprocess_exec(
                     "git", "-C", str(repo_dir), "fetch", "--all",
                     stdout=asyncio.subprocess.PIPE,
@@ -211,6 +218,7 @@ class DocSourceManager:
                         stderr=asyncio.subprocess.PIPE
                     )
                     await process.communicate()
+
             return True
         except Exception as e:
             print(f"❌ Error processing {repo_dir.name if 'repo_dir' in locals() else source.get('name', 'unknown')}: {str(e)}")
@@ -532,8 +540,7 @@ def main():
             sys.exit(1)
         asyncio.run(handle_git_operations(initializer, args))
     else:
-        # Run initialization or nuke operation
-        asyncio.run(initializer.run(nuke=args.nuke))
+        asyncio.run(initializer.run(args.nuke))
 
 if __name__ == "__main__":
     main()
